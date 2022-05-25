@@ -2,11 +2,14 @@ package fr.devanonyme.notepadd;
 
 import fr.devanonyme.notepadd.menus.function.FunctionFichier;
 import fr.devanonyme.notepadd.menus.function.FunctionTemplates;
+import fr.devanonyme.notepadd.menus.keys.KeyHandler;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 public class Main implements ActionListener {
 
@@ -19,12 +22,16 @@ public class Main implements ActionListener {
     JMenu menuFile;
     JMenuItem newFile, load, save, saveAs;
 
-    FunctionFichier functionFichier = new FunctionFichier(this);
+    public FunctionFichier functionFichier = new FunctionFichier(this);
     FunctionTemplates functionTemplates = new FunctionTemplates(this);
+    KeyHandler keyHandler = new KeyHandler(this);
 
     // SKRIPT
-    JMenu menuSkript;
+    JMenu menuSkript, itemMenuEvents;
     JMenuItem itemCommand;
+
+    JMenu menuEventBreak, menuEventPlace;
+    JMenuItem eventOnJoin, eventOnQuit, eventOnBreak, eventOnBreakOf, eventOnPlace, eventOnPlaceOf, eventOnFirstJoin, eventOnDrop, eventOnPickup, eventOnChat;
 
     public static void main(String[] args) {
         new Main();
@@ -40,7 +47,7 @@ public class Main implements ActionListener {
     }
 
     public void createWindow() {
-        window = new JFrame("Intellij Skript");
+        window = new JFrame("Intellij Skript : Nouveau");
         window.setSize(800, 600);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -56,6 +63,7 @@ public class Main implements ActionListener {
         textArea.setSelectionColor(new Color(0, 148, 255));
         textArea.setBorder(null);
         textArea.setTabSize(2);
+        textArea.addKeyListener(keyHandler);
         window.add(textArea);
     }
 
@@ -76,21 +84,24 @@ public class Main implements ActionListener {
         menuBar.add(menuFile);
 
         newFile = new JMenuItem("Nouveau");
+        newFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
         newFile.addActionListener(this);
-        newFile.setActionCommand("Nouveau");
-        menuFile.add(newFile);
+        newFile.setActionCommand("Nouveau");        menuFile.add(newFile);
 
         load = new JMenuItem("Ouvrir");
+        load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
         load.addActionListener(this);
         load.setActionCommand("Ouvrir");
         menuFile.add(load);
 
         save = new JMenuItem("Enregistrez");
+        save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
         save.addActionListener(this);
         save.setActionCommand("Enregistrez");
         menuFile.add(save);
 
         saveAs = new JMenuItem("Enregistrez - sous");
+        saveAs.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
         saveAs.addActionListener(this);
         saveAs.setActionCommand("Enregistrez - sous");
         menuFile.add(saveAs);
@@ -106,6 +117,65 @@ public class Main implements ActionListener {
         itemCommand.setActionCommand("itemCommand");
         menuSkript.add(itemCommand);
 
+        // EVENTS
+        itemMenuEvents = new JMenu("Évènements");
+        menuBar.add(itemMenuEvents);
+
+        eventOnJoin = new JMenuItem("on join");
+        eventOnJoin.addActionListener(this);
+        eventOnJoin.setActionCommand("eventOnJoin");
+        itemMenuEvents.add(eventOnJoin);
+
+        eventOnQuit = new JMenuItem("on quit");
+        eventOnQuit.addActionListener(this);
+        eventOnQuit.setActionCommand("eventOnQuit");
+        itemMenuEvents.add(eventOnQuit);
+
+        eventOnFirstJoin = new JMenuItem("on first join");
+        eventOnFirstJoin.addActionListener(this);
+        eventOnFirstJoin.setActionCommand("eventOnFirstJoin");
+        itemMenuEvents.add(eventOnFirstJoin);
+
+        menuEventBreak = new JMenu("on break");
+        itemMenuEvents.add(menuEventBreak);
+
+        eventOnBreak = new JMenuItem("on break");
+        eventOnBreak.addActionListener(this);
+        eventOnBreak.setActionCommand("eventOnBreak");
+        menuEventBreak.add(eventOnBreak);
+
+        eventOnBreakOf = new JMenuItem("on break of <block>");
+        eventOnBreakOf.addActionListener(this);
+        eventOnBreakOf.setActionCommand("eventOnBreakOf");
+        menuEventBreak.add(eventOnBreakOf);
+
+        menuEventPlace = new JMenu("on place");
+        itemMenuEvents.add(menuEventPlace);
+
+        eventOnPlace = new JMenuItem("on place");
+        eventOnPlace.addActionListener(this);
+        eventOnPlace.setActionCommand("eventOnPlace");
+        menuEventPlace.add(eventOnPlace);
+
+        eventOnPlaceOf = new JMenuItem("on place of <block>");
+        eventOnPlaceOf.addActionListener(this);
+        eventOnPlaceOf.setActionCommand("eventOnPlaceOf");
+        menuEventPlace.add(eventOnPlaceOf);
+
+        eventOnDrop = new JMenuItem("on drop");
+        eventOnDrop.addActionListener(this);
+        eventOnDrop.setActionCommand("eventOnDrop");
+        itemMenuEvents.add(eventOnDrop);
+
+        eventOnPickup = new JMenuItem("on pickup");
+        eventOnPickup.addActionListener(this);
+        eventOnPickup.setActionCommand("eventOnPickup");
+        itemMenuEvents.add(eventOnPickup);
+
+        eventOnChat = new JMenuItem("on chat");
+        eventOnChat.addActionListener(this);
+        eventOnChat.setActionCommand("eventOnChat");
+        itemMenuEvents.add(eventOnChat);
     }
 
 
@@ -130,6 +200,36 @@ public class Main implements ActionListener {
             // Skript Models
             case "itemCommand":
                 functionTemplates.templateCommand();
+                break;
+            case "eventOnJoin":
+                functionTemplates.templateEventOnJoin();
+                break;
+            case "eventOnQuit":
+                functionTemplates.templateEventOnQuit();
+                break;
+            case "eventOnFirstJoin":
+                functionTemplates.templateEventOnFirstJoin();
+                break;
+            case "eventOnBreak":
+                functionTemplates.templateEventOnBreak();
+                break;
+            case "eventOnBreakOf":
+                functionTemplates.templateEventOnBreakOf();
+                break;
+            case "eventOnPlace":
+                functionTemplates.templateEventOnPlace();
+                break;
+            case "eventOnPlaceOf":
+                functionTemplates.templateEventOnPlaceOf();
+                break;
+            case "eventOnDrop":
+                functionTemplates.templateEventOnDrop();
+                break;
+            case "eventOnPickup":
+                functionTemplates.templateEventOnPickup();
+                break;
+            case "eventOnChat":
+                functionTemplates.templateEventOnChat();
                 break;
         }
     }

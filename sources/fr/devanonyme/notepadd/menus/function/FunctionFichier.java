@@ -2,11 +2,8 @@ package fr.devanonyme.notepadd.menus.function;
 
 import fr.devanonyme.notepadd.Main;
 
-//import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 
 public class FunctionFichier {
 
@@ -64,7 +61,7 @@ public class FunctionFichier {
     }
 
     public void saveAs() {
-        FileDialog fd = new FileDialog(main.window, "Enregistrez", FileDialog.SAVE);
+        FileDialog fd = new FileDialog(main.window, "Enregistrez sous..", FileDialog.SAVE);
         fd.setVisible(true);
 
         if(fd.getFile() != null) {
